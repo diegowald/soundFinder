@@ -1,0 +1,61 @@
+http://pixedin.blogspot.com.ar/2012/04/how-to-echoprint-installing-echoprint.html
+
+How to? Echoprint: Installing Echoprint Server on Ubuntu
+The Echoprint server is a custom component for Apache Solr to index Echoprint codes and hash times. In order to keep the index fast, the Echoprint codes are stored in a Tokyo Tyrant key/value store. The github for Echoprint server assumes that TokyoTyrant is already installed on the machine on which you are going to install and run the Echoprint server.
+
+Installing Tokyo Cabinet
+
+Tokyo Cabinet is a library of routines for managing a database. The database is a simple data file containing records, each is a pair of a key and a value. Every key and value is serial bytes with variable length. Both binary data and character string can be used as a key and a value. There is neither concept of data tables nor data types. Records are organized in hash table, B+ tree, or fixed-length array. More information can be obtained here.
+
+The latest version can be obtained here. I will be using version 1.4.32 for this article. This version can be downloaded from http://sourceforge.net/projects/tokyocabinet/files/tokyocabinet/1.4.32/tokyocabinet-1.4.32.tar.gz/download. Following are the steps to install TokyoCabinet in directory /usr/local/tokyocabinet-
+
+wget http://sourceforge.net/projects/tokyocabinet/files/tokyocabinet/1.4.32/tokyocabinet-1.4.32.tar.gz
+tar xvf tokyocabinet-1.4.32.tar.gz
+cd tokyocabinet-1.4.32
+sudo apt-get install zlib1g-dev
+sudo apt-get install libbz2-dev
+sudo mkdir /usr/local/tokyocabinet-1.4.21/
+./configure --prefix=/usr/local/tokyocabinet-1.4.21/
+make
+sudo make install
+
+
+Installing Tokyo Tyrant
+
+Tokyo Tyrant is a package of network interface to Tokyo Cabinet. Tokyo Tyrant is provided for concurrent and remote connections to Tokyo Cabinet. It is composed of the server process managing a database and its access library for client applications. You can find the latest version of Tokyo Tyrant here. For this article I will use version 1.1.33 that can be obtained from here.
+
+wget http://sourceforge.net/projects/tokyocabinet/files/tokyotyrant/1.1.33/tokyotyrant-1.1.33.tar.gz
+tar xvf tokyotyrant-1.1.27.tar.gz
+cd tokyotyrant-1.1.33
+sudo mkdir /usr/local/tokyotyrant-1.1.33
+./configure --prefix=/usr/local/tokyotyrant-1.1.33/ --with-tc=/usr/local/tokyocabinet-1.4.32/
+make
+sudo make install
+You are ready to run Tokyo Torent server.
+
+/usr/local/tokyotyrant-1.1.33/bin/ttserver
+
+
+Note: 
+
+In some cases you might see following error: error while loading shared libraries: libtokyocabinet.so.8: cannot open shared object file: No such file or directory. Use following steps to fix this error
+
+cd /usr/local/tokyotyrant-1.1.33/
+ln -s /usr/local/tokyocabinet-1.4.32/lib/libtokyocabinet.so.8 lib/
+Installing Echoprint Server
+
+You can get more information here. I will use all default options to install the server, i.e., echoprint-server and ttserver on same machine and echoprint-server and port at localhost:8502. If you want to modify any of these you can find information at the above link.
+
+Create a directory where you want to install the server. For this article I will use /home/smishra/echoprint
+cd /home/smishra/echoprint
+git init
+git pull git://github.com/echonest/echoprint-server.git
+cd echoprint/solr/solr
+java -Dsolr.solr.home=~/workspace/echoprint/solr/solr/solr/ -Djava.awt.headless=true -jar start.jar
+install python-setuptools: sudo apt-get install python-setuptools
+install web.py module: sudo easy_install web.py
+install pyechonest: sudo easy_install pyechonest
+
+Now you are ready to run python API examples given under echoprint-server/API
+
+

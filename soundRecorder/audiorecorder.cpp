@@ -366,7 +366,7 @@ void AudioRecorder::leerConfiguracion()
     _codigoCanal = "XYZ";
     _formatoNombreArchivo = "%canal%-%YYYY%%MM%%DD%%hh%%mm%%ss%";
     _intervalo = 10;
-    _pathSonidos = "snd/";
+    _pathSonidos = "./snd/";
 }
 
 
@@ -410,6 +410,7 @@ void AudioRecorder::onTimer()
     recorderInUse->setOutputLocation(QUrl(nombreArchivo));
 
     qDebug() << recorderInUse->state();
+    qDebug() << recorderInUse->outputLocation().url();
     if (recorderInUse->state() == QMediaRecorder::StoppedState)
     {
         recorderInUse->setAudioInput(boxValue(ui->audioDeviceBox).toString());

@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>addtab.png</file>
+        <file>defaulticon.png</file>
+        <file>closetab.png</file>
+        <file>go-next.png</file>
+        <file>go-previous.png</file>
+        <file>process-stop.png</file>
+        <file>simplebrowser.svg</file>
+        <file>view-refresh.png</file>
+    </qresource>
+    <qresource prefix="/mic">
+        <file alias="mic">ic_mic_48px.svg</file>
+    </qresource>
+</RCC>

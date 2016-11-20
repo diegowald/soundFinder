@@ -53,6 +53,11 @@
 #include <QDateTime>
 #include <QtDebug>
 
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
+#include <QProcess>
+
+
 static qreal getPeakValue(const QAudioFormat &format);
 static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);
 
@@ -69,6 +74,7 @@ static QVector<qreal> getBufferLevels(const T *buffer, int frames, int channels)
  * genere el archivo nuevo, registre el archivo realizado en la base de datos, etc etc
  */
 
+QString AudioRecorder::_echoprint_codeGen = "";
 
 AudioRecorder::AudioRecorder(QWidget *parent) :
     QMainWindow(parent),
@@ -366,7 +372,8 @@ void AudioRecorder::leerConfiguracion()
     _codigoCanal = "XYZ";
     _formatoNombreArchivo = "%canal%-%YYYY%%MM%%DD%%hh%%mm%%ss%";
     _intervalo = 10;
-    _pathSonidos = "./snd/";
+    _pathSonidos = "/home/diego/QtProjects/soundFinder/bin/snd/";
+    _echoprint_codeGen = "./echoprint-codegen";
 }
 
 
@@ -398,6 +405,7 @@ void AudioRecorder::onTimer()
     if (recorderInUse->state() == QMediaRecorder::RecordingState)
     {
         recorderInUse->stop();
+        QFuture<void> future = QtConcurrent::run(codegen, recorderInUse->outputLocation().toString());
     }
 
 
@@ -431,3 +439,14 @@ void AudioRecorder::onTimer()
         recorderInUse->record();
     }
 }
+
+void AudioRecorder::codegen(const QString &file)
+{
+    QProcess process;
+    QString command = _echoprint_codeGen + " " + file;
+    process.start(command);
+    process.waitForFinished();
+    QString output = process.readAllStandardOutput();
+    qDebug() << output;
+}
+

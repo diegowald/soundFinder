@@ -66,6 +66,8 @@ private:
     void leerConfiguracion();
     QString calcularNombreDeArchivo() const;
 
+    static void codegen(const QString &file);
+
     /*
      * Idea para el nombre del archivo
      * leer de alguna configuracion la direccion de los servers
@@ -104,6 +106,7 @@ private:
     QString _formatoNombreArchivo;
     int _intervalo;
     QString _pathSonidos;
+    static QString _echoprint_codeGen;
 
 };
 
